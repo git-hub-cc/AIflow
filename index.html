@@ -1,130 +1,13 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+  <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Workflow Builder - Stage 3</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link href="lib/fonts/remixicon.css" rel="stylesheet">
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
-    <!-- 只需要在这里添加 type="module" -->
-    <script type="module">
-        import { GlobalWorkerOptions } from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs';
-        GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
-    </script>
-</head>
-<body>
-<div class="app-container">
-    <!-- 顶部导航栏 / 控制区 -->
-    <header class="top-bar">
-        <div class="app-title">AI Workflow Builder</div>
-        <div class="actions">
-            <button id="run-workflow-btn" class="btn primary-btn"><i class="ri-play-fill"></i> 运行</button>
-            <button id="save-workflow-btn" class="btn secondary-btn"><i class="ri-save-line"></i> 保存</button>
-            <button id="load-workflow-btn" class="btn secondary-btn"><i class="ri-folder-open-line"></i> 加载</button>
-            <!-- NEW: RAG 文档管理按钮 -->
-            <button id="manage-rag-docs-btn" class="btn secondary-btn"><i class="ri-book-open-line"></i> RAG 文档</button>
-        </div>
-    </header>
-
-    <!-- 主内容区域 -->
-    <main class="main-content">
-        <!-- 左侧卡片库 (Toolbox) -->
-        <aside class="toolbox">
-            <h3>组件库</h3>
-            <div class="card-list">
-                <!-- 每个 card-item 都是一个可拖拽的组件类型 -->
-                <div class="card-item" draggable="true" data-card-type="start">
-                    <i class="ri-play-circle-line icon"></i>
-                    <span class="label">开始</span>
-                </div>
-                <div class="card-item" draggable="true" data-card-type="text_input">
-                    <i class="ri-file-text-line icon"></i>
-                    <span class="label">文本输入</span>
-                </div>
-                <div class="card-item" draggable="true" data-card-type="rag_content">
-                    <i class="ri-database-2-line icon"></i>
-                    <span class="label">RAG 内容</span>
-                </div>
-                <div class="card-item" draggable="true" data-card-type="llm_call">
-                    <i class="ri-robot-2-line icon"></i>
-                    <span class="label">LLM 调用</span>
-                </div>
-                <div class="card-item" draggable="true" data-card-type="agent">
-                    <i class="ri-account-circle-line icon"></i>
-                    <span class="label">Agent</span>
-                </div>
-                <div class="card-item" draggable="true" data-card-type="format_output">
-                    <i class="ri-code-s-slash-line icon"></i>
-                    <span class="label">格式化输出</span>
-                </div>
-                <div class="card-item" draggable="true" data-card-type="end">
-                    <i class="ri-stop-circle-line icon"></i>
-                    <span class="label">结束</span>
-                </div>
-                <!-- 更多卡片类型将在后续阶段添加 -->
-            </div>
-        </aside>
-
-        <!-- 中间工作流画布 (Canvas) -->
-        <section id="workflow-canvas" class="workflow-canvas">
-            <div class="canvas-grid-bg"></div>
-            <div id="canvas-content" class="canvas-content">
-                <!-- 拖拽到此的卡片和SVG画布将由JS动态添加到这里 -->
-            </div>
-        </section>
-
-        <!-- 右侧属性面板 (Properties Panel) -->
-        <aside id="properties-panel" class="properties-panel">
-            <h3>属性</h3>
-            <div class="panel-content">
-                <p class="no-selection-message">请选择一个卡片或连线以编辑其属性。</p>
-                <!-- 卡片属性将动态加载到这里 -->
-            </div>
-        </aside>
-    </main>
-</div>
-
-<!-- Modals (Overlay for Load/Save Dialogs) -->
-<div id="load-workflow-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">×</span>
-        <h2>加载工作流</h2>
-        <div id="saved-workflows-list" class="saved-workflows-list">
-            <p class="no-workflows-message">没有已保存的工作流。</p>
-            <!-- Saved workflows will be loaded here -->
-        </div>
-    </div>
-</div>
-
-<!-- NEW: RAG 文档管理模态框 -->
-<div id="rag-docs-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">×</span>
-        <h2>RAG 文档管理</h2>
-        <div class="input-group">
-            <label for="rag-file-input">选择文件 (PDF 或 TXT)</label>
-            <input type="file" id="rag-file-input" accept=".pdf,.txt" multiple>
-        </div>
-        <button id="process-rag-file-btn" class="btn primary-btn" disabled><i class="ri-add-line"></i> 添加并处理</button>
-        <p id="rag-processing-status" style="margin-top: 10px; color: var(--color-info);"></p>
-
-        <h3 style="margin-top: var(--spacing-lg);">已导入文档</h3>
-        <div id="imported-rag-docs-list" class="saved-workflows-list" style="max-height: 300px;">
-            <p class="no-workflows-message">没有已导入的文档。</p>
-        </div>
-        <p style="margin-top: 10px; font-size: 0.8em; color: #888;">
-            注意：处理文档可能需要一些时间，并会占用浏览器内存。
-            文件存储在本地 IndexedDB 中，不会上传到服务器。
-        </p>
-    </div>
-</div>
-
-<!-- JavaScript 文件 -->
-<script type="module" src="js/main.js"></script>
-</body>
+    <title>AI Workflow Builder - Vue Edition</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

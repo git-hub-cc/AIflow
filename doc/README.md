@@ -128,8 +128,8 @@
     学习这三样，你就能彻底明白一个网页是怎么从无到有、从静到动地呈现出来的，这是所有Web开发的基础。
 
 ### 6. 筛选项目文件与关注点 (项目结构与核心组件)
-[01get_path.py](01get_path.py)
-[02get_content.py](02get_content.py)
+[01get_path.py](../script/01get_path.py)
+[02get_content.py](../script/02get_content.py)
 
 ### 7. 分析复杂代码
 1. 分析代码，使用文字描述

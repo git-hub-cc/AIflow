@@ -1,0 +1,64 @@
+{
+  "cards": [
+    {
+      "id": "card_1716188330119_f3e3",
+      "type": "start",
+      "x": 50,
+      "y": 200,
+      "properties": {
+        "output": "workflow_start"
+      }
+    },
+    {
+      "id": "card_1716188345123_a1b2",
+      "type": "text_input",
+      "x": 250,
+      "y": 200,
+      "properties": {
+        "value": "构建一个AI工作流生成器，能根据用户需求生成项目规约文档。"
+      }
+    },
+    {
+      "id": "card_1716188375131_e6f7",
+      "type": "llm_call",
+      "x": 531,
+      "y": 200,
+      "properties": {
+        "model": "THUDM/GLM-4-32B-0414",
+        "prompt": "角色：你是一位顶级的软件架构师。\n任务：根据用户需求和项目开发原则，为即将开发的项目生成一份详细、清晰、无歧义的功能需求规约 (spec.md)。\n\n## 项目开发原则与规范 (上下文):\n{{input}}\n\n## 原始用户需求:\n{{workflow_start.card_1716188345123_a1b2.value}}\n\n请严格遵循功能规约的格式，重点描述“做什么(What)”和“为什么(Why)”，避免涉及具体的技术实现细节。"
+      }
+    },
+    {
+      "id": "card_1716188435147_m4n5",
+      "type": "end",
+      "x": 767,
+      "y": 198,
+      "properties": {
+        "result": "workflow_end"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_1716188450151_p6q7",
+      "startCardId": "card_1716188330119_f3e3",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188345123_a1b2",
+      "endPortIndex": 0
+    },
+    {
+      "id": "conn_1759643013753_0f0f6a0aab6408",
+      "startCardId": "card_1716188375131_e6f7",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188435147_m4n5",
+      "endPortIndex": 0
+    },
+    {
+      "id": "conn_1759643316356_e3a98b581ac6d",
+      "startCardId": "card_1716188345123_a1b2",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188375131_e6f7",
+      "endPortIndex": 0
+    }
+  ]
+}

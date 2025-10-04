@@ -1,0 +1,133 @@
+{
+  "cards": [
+    {
+      "id": "card_1716188330119_f3e3",
+      "type": "start",
+      "x": 50,
+      "y": 200,
+      "properties": {
+        "output": "workflow_start"
+      }
+    },
+    {
+      "id": "card_1716188345123_a1b2",
+      "type": "text_input",
+      "x": 250,
+      "y": 200,
+      "properties": {
+        "value": "构建一个AI工作流生成器，能根据用户需求生成项目规约文档。"
+      }
+    },
+    {
+      "id": "card_1716188360127_c4d5",
+      "type": "rag_content",
+      "x": 500,
+      "y": 200,
+      "properties": {
+        "query": "项目开发的核心原则和代码规范",
+        "top_k": 5
+      }
+    },
+    {
+      "id": "card_1716188375131_e6f7",
+      "type": "llm_call",
+      "x": 750,
+      "y": 200,
+      "properties": {
+        "model": "THUDM/GLM-4-32B-0414",
+        "prompt": "角色：你是一位顶级的软件架构师。\n任务：根据用户需求和项目开发原则，为即将开发的项目生成一份详细、清晰、无歧义的功能需求规约 (spec.md)。\n\n## 项目开发原则与规范 (上下文):\n{{input}}\n\n## 原始用户需求:\n{{workflow_start.card_1716188345123_a1b2.value}}\n\n请严格遵循功能规约的格式，重点描述“做什么(What)”和“为什么(Why)”，避免涉及具体的技术实现细节。"
+      }
+    },
+    {
+      "id": "card_1716188390135_g8h9",
+      "type": "llm_call",
+      "x": 1000,
+      "y": 200,
+      "properties": {
+        "model": "THUDM/GLM-4-32B-0414",
+        "prompt": "角色：你是一位经验丰富的技术负责人。\n任务：基于以下功能规约，生成一份全面的技术实现计划 (plan.md)。计划应包括推荐的技术栈、系统架构、数据模型定义和API接口草案。\n\n## 功能需求规约:\n{{input}}\n\n请确保技术选型合理，架构清晰，为下一步的任务分解和代码实现提供明确的指导。"
+      }
+    },
+    {
+      "id": "card_1716188405139_i0j1",
+      "type": "agent",
+      "x": 1250,
+      "y": 200,
+      "properties": {
+        "role": "自动化开发工程师",
+        "initial_prompt": "分析以下技术实现计划，将其分解为一系列可执行的开发任务列表 (tasks.md)，并根据这些任务生成项目的初始目录结构和关键代码文件的框架。\n\n## 技术实现计划:\n{{input}}",
+        "tools": "file_system_manager,code_generator"
+      }
+    },
+    {
+      "id": "card_1716188420143_k2l3",
+      "type": "format_output",
+      "x": 1500,
+      "y": 200,
+      "properties": {
+        "format": "json",
+        "template": "{\n  \"message\": \"项目规约与代码框架已成功生成\",\n  \"details\": {{input}}\n}"
+      }
+    },
+    {
+      "id": "card_1716188435147_m4n5",
+      "type": "end",
+      "x": 1750,
+      "y": 200,
+      "properties": {
+        "result": "workflow_end"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_1716188450151_p6q7",
+      "startCardId": "card_1716188330119_f3e3",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188345123_a1b2",
+      "endPortIndex": 0
+    },
+    {
+      "id": "conn_1716188465155_r8s9",
+      "startCardId": "card_1716188345123_a1b2",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188360127_c4d5",
+      "endPortIndex": 0
+    },
+    {
+      "id": "conn_1716188480159_t0u1",
+      "startCardId": "card_1716188360127_c4d5",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188375131_e6f7",
+      "endPortIndex": 0
+    },
+    {
+      "id": "conn_1716188495163_v2w3",
+      "startCardId": "card_1716188375131_e6f7",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188390135_g8h9",
+      "endPortIndex": 0
+    },
+    {
+      "id": "conn_1716188510167_x4y5",
+      "startCardId": "card_1716188390135_g8h9",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188405139_i0j1",
+      "endPortIndex": 0
+    },
+    {
+      "id": "conn_1716188525171_z6a7",
+      "startCardId": "card_1716188405139_i0j1",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188420143_k2l3",
+      "endPortIndex": 0
+    },
+    {
+      "id": "conn_1716188540175_b8c9",
+      "startCardId": "card_1716188420143_k2l3",
+      "startPortIndex": 0,
+      "endCardId": "card_1716188435147_m4n5",
+      "endPortIndex": 0
+    }
+  ]
+}

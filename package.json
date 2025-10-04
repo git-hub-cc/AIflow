@@ -1,0 +1,23 @@
+{
+  "name": "ai-workflow-builder-vue",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "localforage": "^1.10.0",
+    "pdfjs-dist": "^4.0.379",
+    "pinia": "^2.1.7",
+    "remixicon": "^4.2.0",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.2.8"
+  }
+}
